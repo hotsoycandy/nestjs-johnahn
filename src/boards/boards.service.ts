@@ -5,7 +5,7 @@ import { Board } from './board.model';
 export class BoardsService {
   private boards: Board[] = [];
 
-  getBoards() {
+  getBoards(): Board[] {
     return this.boards;
   }
 }
