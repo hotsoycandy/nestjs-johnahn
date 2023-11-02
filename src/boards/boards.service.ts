@@ -1,13 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board } from './board.entity';
+import { BoardRepository } from './board.repository';
 
 @Injectable()
 export class BoardsService {
-  constructor(
-    @Inject('BOARD_REPOSITORY')
-    private boardRepository: Repository<Board>,
-  ) {}
+  constructor(private boardRepository: BoardRepository) {}
 
   async getBoardById(id: number): Promise<Board> {
     const board = await this.boardRepository.findOne({ where: { id } });
