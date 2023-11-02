@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
 import { Board } from './boards/board.entity';
+import { User } from './auth/user.entity';
 
 export const databaseProviders = [
   {
@@ -12,7 +13,7 @@ export const databaseProviders = [
         username: 'test',
         password: 'ZWADrGj3gawzlTq',
         database: 'board_app',
-        entities: [Board],
+        entities: [Board, User],
         synchronize: true,
       });
 
