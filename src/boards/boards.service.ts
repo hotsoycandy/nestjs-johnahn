@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board } from './board.entity';
 import { CreateBoardDTO } from './dto/create-board.dto';
 import { BoardRepository } from './board.repository';
+import { BoardStatus } from './types/board-status.enum';
 
 @Injectable()
 export class BoardsService {
@@ -17,5 +18,12 @@ export class BoardsService {
       throw new NotFoundException(`Can't find board with id ${id}`);
     }
     return board;
+  }
+
+  async deleteBoard(id: number): Promise<void> {
+    const { affected } = await this.boardRepository.delete(id);
+    if (affected === 0) {
+      throw new NotFoundException(`Can't find board with id ${id}`);
+    }
   }
 }
