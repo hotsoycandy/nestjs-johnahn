@@ -1,7 +1,17 @@
-import { Controller, Param, Body, Get, Post, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Body,
+  Get,
+  Post,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { Board } from './board.entity';
 import { CreateBoardDTO } from './dto/create-board.dto';
+import { BoardStatus } from './types/board-status.enum';
+import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 
 @Controller('boards')
 export class BoardsController {
@@ -15,6 +25,14 @@ export class BoardsController {
   @Get('/:boardId')
   getBoardById(@Param('boardId') boardId: number): Promise<Board> {
     return this.boardsService.getBoardById(boardId);
+  }
+
+  @Patch('/:boardId')
+  updateBoard(
+    @Param('boardId') boardId: number,
+    @Body('boardStatus', BoardStatusValidationPipe) boardStatus: BoardStatus,
+  ): Promise<Board> {
+    return this.boardsService.updateBoardStatus(boardId, boardStatus);
   }
 
   @Delete('/:boardId')
