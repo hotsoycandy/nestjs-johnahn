@@ -28,7 +28,7 @@ export class BoardsController {
   }
 
   @Patch('/:boardId')
-  updateBoard(
+  updateBoardStatus(
     @Param('boardId') boardId: number,
     @Body('boardStatus', BoardStatusValidationPipe) boardStatus: BoardStatus,
   ): Promise<Board> {
