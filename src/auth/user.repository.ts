@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialDTO } from './dto/auth-credential.dto';
@@ -14,9 +14,16 @@ export class UserRepository extends Repository<User> {
   }
 
   async createUser(authCredentialDTO: AuthCredentialDTO): Promise<User> {
-    const { username, password } = authCredentialDTO;
-    const user = this.create({ username, password });
-    await this.save(user);
-    return user;
+    try {
+      const { username, password } = authCredentialDTO;
+      const user = this.create({ username, password });
+      await this.save(user);
+      return user;
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        throw new ConflictException('Existing username');
+      }
+      throw err;
+    }
   }
 }
