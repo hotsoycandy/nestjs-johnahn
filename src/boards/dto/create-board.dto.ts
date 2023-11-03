@@ -8,4 +8,8 @@ export class CreateBoardDTO {
   @IsString()
   @IsNotEmpty()
   description: string;
+
+  toString(): string {
+    return JSON.stringify({ title: this.title, description: this.description });
+  }
 }
