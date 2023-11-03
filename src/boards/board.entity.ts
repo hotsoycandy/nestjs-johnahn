@@ -13,6 +13,7 @@ export class Board {
   description: string;
 
   @Column({
+    type: 'enum',
     enum: Object.values(BoardStatus),
     default: BoardStatus.PUBLIC,
   })
