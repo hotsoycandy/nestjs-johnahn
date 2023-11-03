@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -16,7 +17,13 @@ export class UserRepository extends Repository<User> {
   async createUser(authCredentialDTO: AuthCredentialDTO): Promise<User> {
     try {
       const { username, password } = authCredentialDTO;
-      const user = this.create({ username, password });
+
+      const hashedPassword = crypto
+        .createHash('sha512')
+        .update(password + 'iamsalt')
+        .digest('base64');
+
+      const user = this.create({ username, password: hashedPassword });
       await this.save(user);
       return user;
     } catch (err) {
