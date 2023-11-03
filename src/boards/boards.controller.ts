@@ -7,6 +7,7 @@ import {
   Delete,
   Patch,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
@@ -20,6 +21,8 @@ import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 @Controller('boards')
 @UseGuards(AuthGuard())
 export class BoardsController {
+  private logger = new Logger('BoardsController');
+
   constructor(private boardsService: BoardsService) {}
 
   @Post('/')
@@ -27,11 +30,17 @@ export class BoardsController {
     @Body() createBoardDTO: CreateBoardDTO,
     @GetUser() user: User,
   ): Promise<Board> {
+    this.logger.verbose(
+      `User ${
+        user.username
+      } creating a new board. Payload ${createBoardDTO.toString()}`,
+    );
     return this.boardsService.createBoard(createBoardDTO, user);
   }
 
   @Get('/')
   getAllBoards(@GetUser() user: User): Promise<Board[]> {
+    this.logger.verbose(`User ${user.username} trying to get all boards`);
     return this.boardsService.getAllBoards(user);
   }
 
