@@ -9,6 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 import { BoardsService } from './boards.service';
 import { Board } from './board.entity';
 import { CreateBoardDTO } from './dto/create-board.dto';
@@ -21,8 +23,11 @@ export class BoardsController {
   constructor(private boardsService: BoardsService) {}
 
   @Post('/')
-  createBoard(@Body() createBoardDTO: CreateBoardDTO): Promise<Board> {
-    return this.boardsService.createBoard(createBoardDTO);
+  createBoard(
+    @Body() createBoardDTO: CreateBoardDTO,
+    @GetUser() user: User,
+  ): Promise<Board> {
+    return this.boardsService.createBoard(createBoardDTO, user);
   }
 
   @Get('/')
