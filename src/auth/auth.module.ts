@@ -7,9 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 
+const CustomPassportModule = PassportModule.register({
+  defaultStrategy: 'jwt',
+});
+
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    CustomPassportModule,
     JwtModule.register({
       secret: '1234',
       signOptions: {
@@ -20,6 +24,6 @@ import { JwtStrategy } from './jwt.strategy';
   ],
   controllers: [AuthController],
   providers: [UserRepository, AuthService, JwtStrategy],
-  exports: [JwtStrategy],
+  exports: [JwtStrategy, CustomPassportModule],
 })
 export class AuthModule {}
